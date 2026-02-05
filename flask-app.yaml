@@ -1,0 +1,37 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: flast-metrics-app
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: flast-metrics-app
+  template:
+    metadata:
+      labels:
+        app: flast-metrics-app
+    spec:
+      containers:
+      - name: flast-metrics-app
+        image: flast-metrics-app:latest
+        imagePullPolicy: Never
+        resources:
+          limits:
+            memory: "64Mi"
+            cpu: "200m"
+        ports:
+        - containerPort: 5000
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: flask-metrics-app
+spec:
+  selector:
+    app: flast-metrics-app
+  ports:
+  - protocol: TCP
+    port: 5000
+    targetPort: 5000
+  type: NodePort
